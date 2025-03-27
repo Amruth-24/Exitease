@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Leave Request Dashboard</title>
+    <link rel="stylesheet" href="adminreqdash.css">
+
+    <script>
+        // Sorting function
+        function sortData(option) {
+            let sortedData;
+            switch (option) {
+                case 'alphabetical':
+                    sortedData = [...leaveData].sort((a, b) => a.name.localeCompare(b.name));
+                    break;
+                case 'department':
+                    sortedData = [...leaveData].sort((a, b) => a.department.localeCompare(b.department));
+                    break;
+                case 'year':
+                    sortedData = [...leaveData].sort((a, b) => a.year.localeCompare(b.year));
+                    break;
+                case 'duration':
+                    sortedData = [...leaveData].sort((a, b) => a.duration - b.duration);
+                    break;
+                case 'oldest':
+                    sortedData = leaveData;  // Leave data as is for oldest request (already sorted in insertion order)
+                    break;
+                default:
+                    sortedData = leaveData;
+            }
+            renderTable(sortedData);
+        }
+
+
+        // Select all function
+        function selectAll(checkbox) {
+            const checkboxes = document.querySelectorAll('.approve-checkbox');
+            checkboxes.forEach(cb => cb.checked = checkbox.checked);
+        }
+        // Approve all function
+        function approveAll() {
+            const checkboxes = document.querySelectorAll('.approve-checkbox');
+            let approvedCount = 0;
+            let rejectedCount = 0;
+
+            checkboxes.forEach(checkbox => {
+                if (checkbox.checked) {
+                    approvedCount++;
+                } else {
+                    rejectedCount++;
+                }
+            });
+
+            // Store counts in localStorage
+            localStorage.setItem('approvedCount', approvedCount);
+            localStorage.setItem('rejectedCount', rejectedCount);
+
+            // Redirect to adminreqcomp.html
+            window.location.href = 'adminreqcomp.html';
+        }
+
+
+    </script>
+</head>
+<body>
+
+    <header class="top-header">
+        <div class="logo"></div>
+        <h1>NFSU Dharwad Outpass System</h1>
+
+    </header>
+
+    <div class="header">
+        <h1>NATIONAL FORENSIC SCIENCE UNIVERSITY</h1>
+        <h2>Admin Leave Request Dashboard</h2>
+    </div>
+
+    <div class="table-container">
+        <!-- <label for="sortOptions">Sort by:</label>
+        <select id="sortOptions" onchange="sortData(this.value)">
+            <option value="alphabetical">Alphabetical</option>
+            <option value="department">Department</option>
+            <option value="year">Year of Study</option>
+            <option value="duration">Duration</option>
+            <option value="oldest">Oldest Request</option>
+        </select> -->
+
+        <!-- Select all checkbox -->
+        <div>
+            <input type="checkbox" id="selectAll" onchange="selectAll(this)">
+            <label for="selectAll">Select All</label>
+        </div>
+
+        <!-- Leave Requests Table -->
+        <table id="reqTable">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th style="display: none;">stud_id</th>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Department</th>
+                    <th>Year</th>
+                    <th>Leave Date-Time</th>
+                    <th>Return Date-Time</th>
+                    <th>Reason For Leave</th>
+                    <th>Location</th>
+                    <th>Remarks</th>
+                </tr>
+            </thead>
+            <tbody id="leaveTableBody">
+                <!-- Rows will be populated here dynamically -->
+            </tbody>
+        </table>
+
+        <!-- Approve all button -->
+        <button onclick="approveAll()">Approve All</button>
+    </div>
+    <script src="adminreqdash.bundle.js"></script>
+</body>
+</html>
